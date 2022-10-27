@@ -1,0 +1,242 @@
+[
+    {
+        "id": "57d5c984.a0e7b",
+        "type": "tab",
+        "label": "Authentication Example",
+        "disabled": false,
+        "info": "You can your example application with IBM Cloud Code Engine\n\nhttps://thomassuedbroecker.github.io/ce-cns"
+    },
+    {
+        "id": "88096981.88df6",
+        "type": "comment",
+        "z": "57d5c984.a0e7b",
+        "name": "2. Request protected data as JSON",
+        "info": "",
+        "x": 220,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "88142578.39a2c",
+        "type": "function",
+        "z": "57d5c984.a0e7b",
+        "name": "Build header",
+        "func": "msg.headers = {\n  'Authorization' :\"bearer \" + global.get(\"glb_token\")\n};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 550,
+        "y": 260,
+        "wires": [
+            [
+                "bfde2608.8101b"
+            ]
+        ]
+    },
+    {
+        "id": "bfde2608.8101b",
+        "type": "http request",
+        "z": "57d5c984.a0e7b",
+        "name": "ENT1 API Request",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://4sightconnect.haxiot.com/{{{query}}}",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "bearer",
+        "senderr": false,
+        "x": 770,
+        "y": 260,
+        "wires": [
+            [
+                "0beb92a5e43c6e0c"
+            ]
+        ]
+    },
+    {
+        "id": "6023edcb.a62c0c",
+        "type": "debug",
+        "z": "57d5c984.a0e7b",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 330,
+        "y": 820,
+        "wires": []
+    },
+    {
+        "id": "0beb92a5e43c6e0c",
+        "type": "debug",
+        "z": "57d5c984.a0e7b",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 950,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "db64fa9cefdd70ab",
+        "type": "http request",
+        "z": "57d5c984.a0e7b",
+        "name": "Bearer Token Request",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://account-api-ent1.haxiot.com/auth?provider=credentials&username=adock_api&password=Pwd1234%23",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "x": 400,
+        "y": 140,
+        "wires": [
+            [
+                "c0c967ac5838516f"
+            ]
+        ]
+    },
+    {
+        "id": "d9b4cc1157fc9da9",
+        "type": "inject",
+        "z": "57d5c984.a0e7b",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 160,
+        "y": 140,
+        "wires": [
+            [
+                "db64fa9cefdd70ab"
+            ]
+        ]
+    },
+    {
+        "id": "c0c967ac5838516f",
+        "type": "function",
+        "z": "57d5c984.a0e7b",
+        "name": "",
+        "func": "global.set(\"glb_token\", msg.payload.BearerToken);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 620,
+        "y": 140,
+        "wires": [
+            [
+                "32501b356a289b2a"
+            ]
+        ]
+    },
+    {
+        "id": "07b404c94c57433c",
+        "type": "comment",
+        "z": "57d5c984.a0e7b",
+        "name": "1. Get Bearer Token/Save Global",
+        "info": "Get the Bearer Token. Save as Global Variable",
+        "x": 210,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "32501b356a289b2a",
+        "type": "debug",
+        "z": "57d5c984.a0e7b",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 810,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "11e52f730b98760b",
+        "type": "change",
+        "z": "57d5c984.a0e7b",
+        "name": "Query Topic",
+        "rules": [
+            {
+                "t": "set",
+                "p": "query",
+                "pt": "msg",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 370,
+        "y": 260,
+        "wires": [
+            [
+                "88142578.39a2c"
+            ]
+        ]
+    },
+    {
+        "id": "9f0647b7bd9fe648",
+        "type": "inject",
+        "z": "57d5c984.a0e7b",
+        "name": "Query Payload",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "docks?format=json",
+        "payloadType": "str",
+        "x": 180,
+        "y": 260,
+        "wires": [
+            [
+                "11e52f730b98760b"
+            ]
+        ]
+    }
+]
